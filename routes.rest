@@ -1,0 +1,65 @@
+// LOCALHOST
+###
+GET http://localhost:8080/chores
+###
+POST http://localhost:8080/chores
+Content-Type: application/json
+
+{
+  "name":"take out trash",
+  "frequency":"1d",
+  "next_due":"2025-02-09T19:00:00-07:00",
+  "current_assignee":"uuid here",
+  "assigned_users": ["uuid here"]
+}
+###
+DELETE http://localhost:8080/chores/67a7c6adc2e0bcf8e5da8324
+###
+GET http://localhost:8080/chores/67a7c6adc2e0bcf8e5da8324
+###
+PUT http://localhost:8080/chores/67a7c6adc2e0bcf8e5da8324
+Content-Type: application/json
+{
+  "next_due":"2025-02-10T19:00:00-07:00",
+}
+###
+GET http://localhost:8080/users
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+{
+  "first_name":"John",
+  "last_name":"Doe",
+  "email":"john.doe@example.com",
+  "password":"password",
+}
+###
+DELETE http://localhost:8080/users/:id
+###
+GET http://localhost:8080/users/:id
+###
+PUT http://localhost:8080/users/:id
+Content-Type: application/json
+{
+  "email":"doe.john@example.com",
+}
+###
+GET http://localhost:8080/collections/:user_id
+###
+POST http://localhost:8080/collections/:user_id
+Content-Type: application/json
+{
+  "name":"chores",
+  "description":"chores for the house",
+  "chores":["chore uuid here"]
+}
+###
+DELETE http://localhost:8080/collections/:user_id/:collection_id
+###
+GET http://localhost:8080/collections/:user_id/:collection_id
+###
+PUT http://localhost:8080/collections/:user_id/:collection_id
+Content-Type: application/json
+{
+  "description":"chores for the garage",
+}
