@@ -63,3 +63,69 @@ Content-Type: application/json
 {
   "description":"chores for the garage",
 }
+
+// DEPLOYED
+###
+GET https://fantastic-parakeet-ogz0.onrender.com/chores
+###
+POST https://fantastic-parakeet-ogz0.onrender.com/chores
+Content-Type: application/json
+
+{
+  "name":"take out trash",
+  "frequency":"1d",
+  "next_due":"2025-02-09T19:00:00-07:00",
+  "current_assignee":"uuid here",
+  "assigned_users": ["uuid here"]
+}
+###
+DELETE https://fantastic-parakeet-ogz0.onrender.com/chores/67a7c6adc2e0bcf8e5da8324
+###
+GET https://fantastic-parakeet-ogz0.onrender.com/chores/67a7c6adc2e0bcf8e5da8324
+###
+PUT https://fantastic-parakeet-ogz0.onrender.com/chores/67a7c6adc2e0bcf8e5da8324
+Content-Type: application/json
+{
+  "next_due":"2025-02-10T19:00:00-07:00",
+}
+###
+GET https://fantastic-parakeet-ogz0.onrender.com/users
+###
+POST https://fantastic-parakeet-ogz0.onrender.com/users
+Content-Type: application/json
+{
+  "first_name":"John",
+  "last_name":"Doe",
+  "email":"john.doe@example.com",
+  "password":"password",
+}
+###
+DELETE https://fantastic-parakeet-ogz0.onrender.com/users/:id
+###
+GET https://fantastic-parakeet-ogz0.onrender.com/users/:id
+###
+PUT https://fantastic-parakeet-ogz0.onrender.com/users/:id
+Content-Type: application/json
+{
+  "email":"doe.john@example.com",
+}
+###
+GET https://fantastic-parakeet-ogz0.onrender.com/collections/:user_id
+###
+POST https://fantastic-parakeet-ogz0.onrender.com/collections/:user_id
+Content-Type: application/json
+{
+  "name":"chores",
+  "description":"chores for the house",
+  "chores":["chore uuid here"]
+}
+###
+DELETE https://fantastic-parakeet-ogz0.onrender.com/collections/:user_id/:collection_id
+###
+GET https://fantastic-parakeet-ogz0.onrender.com/collections/:user_id/:collection_id
+###
+PUT https://fantastic-parakeet-ogz0.onrender.com/collections/:user_id/:collection_id
+Content-Type: application/json
+{
+  "description":"chores for the garage",
+}
