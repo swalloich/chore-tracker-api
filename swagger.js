@@ -1,5 +1,9 @@
 const swaggerAutogen = require('swagger-autogen')()
 
+/*
+ * live url: fantastic-parakeet-ogz0.onrender.com
+ * local url: localhost:8080
+ */
 const doc = {
   info: {
     title: 'Chore Tracker API',
