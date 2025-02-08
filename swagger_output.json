@@ -188,8 +188,7 @@
             "description": "Chore data",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {}
+              "$ref": "#/definitions/NewChore"
             }
           }
         ],

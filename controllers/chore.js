@@ -9,6 +9,9 @@ async function createChore(req, res) {
           in: 'body',
           description: 'Chore data',
           required: true,
+          schema: {
+              $ref: "#/definitions/NewChore"
+          }
       }
   */
   const { error } = schemas.choreSchema.validate(req.body, { abortEarly: false })
