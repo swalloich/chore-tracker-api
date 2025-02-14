@@ -91,4 +91,4 @@ async function updateOne({ collection, data, filter, options }, next) {
   }
 }
 
-module.exports = { connect, find, findOne, insertOne, updateOne }
+module.exports = { connect, deleteOne, find, findOne, insertOne, updateOne }

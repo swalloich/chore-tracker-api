@@ -1,6 +1,7 @@
 const db = require('../db')
 const { ObjectId } = require('mongodb')
 const schemas = require('./validation')
+const ServerError = require('../middleware/ServerError')
 
 const collection = 'chores'
 
@@ -16,8 +17,7 @@ async function createChore(req, res) {
   */
   const { error } = schemas.choreSchema.validate(req.body, { abortEarly: false })
   if (error) {
-    res.status(400).json({ errors: error.details.map((error) => error.message) })
-    return
+    throw new ServerError(400, error.details.map((error) => error.message))
   }
 
   try {
@@ -38,16 +38,20 @@ async function deleteChore(req, res) {
   */
   const { error } = schemas.idSchema.validate(req.params.id)
   if (error) {
-    res.status(400).json({ errors: error.details.map((error) => error.message) })
-    return
+    throw new ServerError(400, error.details.map((error) => error.message))
   }
 
-  try {
-    const result = await db.deleteOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
-    res.status(204).send()
-  } catch (err) {
-    next(err)
-  }
+  await db.deleteOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
+    .then((result) => {
+      if (result.deletedCount === 0) {
+        res.status(404).send(`No chore found with id: ${req.params.id}`)
+      } else {
+        res.status(204).send()
+      }
+    })
+    .catch((err) => {
+      next(err)
+    })
 }
 
 async function getChore(req, res) {
@@ -72,13 +76,32 @@ async function getChore(req, res) {
     })
 }
 
-async function getChores(req, res) {
-  /* #swagger.parameters['body'] = {
-          in: 'body',
-          description: 'get all chores that match the query',
-          required: true,
+async function getChores(req, res, next) {
+  /* #swagger.parameters['ids'] = {
+          in: 'query',
+          description: 'Get all chores in the list of ids, or all chores if not specified. Recommend using GET /chores/:id if only one chore is needed',
+          required: false,
       }
   */
+  let ids = req.query.ids
+  if (ids) {
+    if (typeof ids === 'string') {
+      ids = ids.split(',')
+    }
+    const { error } = schemas.idArraySchema.validate(ids, { abortEarly: false })
+    if (error) {
+      throw new ServerError(400, error.details.map((error) => error.message))
+    }
+  }
+  const params = ids ? { _id: { $in: ids.map((id) => ObjectId.createFromHexString(id)) } } : {}
+  const chores = await db.find({ collection, params })
+  chores.toArray()
+    .then((chores) => {
+      res.status(200).json(chores)
+    })
+    .catch((err) => {
+      next(err)
+    })
 }
 
 async function updateChore(req, res) {

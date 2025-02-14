@@ -5,10 +5,10 @@
     "description": "API for tracking chores",
     "version": "1.0.0"
   },
-  "host": "fantastic-parakeet-ogz0.onrender.com",
+  "host": "localhost:8080",
   "basePath": "/",
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
     "/": {
@@ -163,19 +163,19 @@
         "description": "",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "description": "get all chores that match the query",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
+            "name": "ids",
+            "in": "query",
+            "description": "get all chores in the list of ids, or all chores if not specified. Recommended to use GET /chores/:id if only one chore is needed",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
@@ -198,9 +198,6 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -218,8 +215,14 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -240,9 +243,6 @@
           },
           "404": {
             "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
