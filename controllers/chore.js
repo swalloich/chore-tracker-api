@@ -24,8 +24,7 @@ async function createChore(req, res) {
     const result = await db.insertOne({ collection, data: req.body })
     res.status(201).json({ id: result.insertedId })
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: err.message })
+    next(err)
   }
 }
 
@@ -57,8 +56,7 @@ async function getChore(req, res) {
       }
     })
     .catch((err) => {
-      console.error(err)
-      res.status(500).json({ message: err.message })
+      next(err)
     })
 }
 
