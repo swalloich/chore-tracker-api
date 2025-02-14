@@ -21,6 +21,14 @@ function connect() {
     })
 }
 
+async function deleteOne({ collection, filter, options }, next) {
+  try {
+    return client.db(DB_NAME).collection(collection).deleteOne(filter, options)
+  } catch (err) {
+    next(err)
+  }
+}
+
 /**
  * Finds all documents the parameters specify in a specified collection
  * @param {*} params - The parameters for the find function
@@ -28,11 +36,11 @@ function connect() {
  * @param {Object} params.params - The parameters for the search
  * @returns {Promise} - The result of the find function
  */
-async function find({ collection, params }) {
+async function find({ collection, params }, next) {
   try {
     return client.db(DB_NAME).collection(collection).find({...params})
   } catch (err) {
-    console.error(err)
+    next(err)
   }
 }
 
@@ -44,11 +52,11 @@ async function find({ collection, params }) {
  * @param {string} params.query - The query to search for
  * @returns {Promise} - The result of the findOne function
  */
-async function findOne({ collection, options, query }) {
+async function findOne({ collection, options, query }, next) {
   try {
     return client.db(DB_NAME).collection(collection).findOne(query, options)
   } catch (err) {
-    console.error(err)
+    next(err)
   }
 }
 
@@ -59,11 +67,11 @@ async function findOne({ collection, options, query }) {
  * @param {Object} params.data - The data to insert 
  * @returns {Promise} - The result of the insertOne function
  */
-async function insertOne({ collection, data }) {
+async function insertOne({ collection, data }, next) {
   try {
     return client.db(DB_NAME).collection(collection).insertOne(data)
   } catch (err) {
-    console.error(err)
+    next(err)
   }
 }
 /**
@@ -75,11 +83,11 @@ async function insertOne({ collection, data }) {
  * @param {Object} params.options - The options for the update
  * @returns {Promise} - The result of the updateOne function
  */
-async function updateOne({ collection, data, filter, options }) {
+async function updateOne({ collection, data, filter, options }, next) {
   try {
     return client.db(DB_NAME).collection(collection).updateOne(filter, { $set: data }, options)
   } catch (err) {
-    console.error(err)
+    next(err)
   }
 }
 

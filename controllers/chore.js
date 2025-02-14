@@ -36,6 +36,18 @@ async function deleteChore(req, res) {
           type: 'string'
       }
   */
+  const { error } = schemas.idSchema.validate(req.params.id)
+  if (error) {
+    res.status(400).json({ errors: error.details.map((error) => error.message) })
+    return
+  }
+
+  try {
+    const result = await db.deleteOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
+    res.status(204).send()
+  } catch (err) {
+    next(err)
+  }
 }
 
 async function getChore(req, res) {
