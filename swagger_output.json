@@ -5,10 +5,10 @@
     "description": "API for tracking chores",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
+  "host": "fantastic-parakeet-ogz0.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/": {

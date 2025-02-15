@@ -5,7 +5,7 @@ const ServerError = require('../middleware/ServerError')
 
 const collection = 'chores'
 
-async function createChore(req, res) {
+async function createChore(req, res, next) {
   /* #swagger.parameters['body'] = {
           in: 'body',
           description: 'Chore data',
@@ -17,7 +17,7 @@ async function createChore(req, res) {
   */
   const { error } = schemas.newChoreSchema.validate(req.body, { abortEarly: false })
   if (error) {
-    throw new ServerError(400, error.details.map((error) => error.message))
+    return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
   }
 
   try {
@@ -28,7 +28,7 @@ async function createChore(req, res) {
   }
 }
 
-async function deleteChore(req, res) {
+async function deleteChore(req, res, next) {
   /* #swagger.parameters['id'] = {
           in: 'path',
           description: 'ID of the chore to delete',
@@ -38,7 +38,7 @@ async function deleteChore(req, res) {
   */
   const { error } = schemas.idSchema.validate(req.params.id)
   if (error) {
-    throw new ServerError(400, error.details.map((error) => error.message))
+    return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
   }
 
   await db.deleteOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
@@ -54,7 +54,7 @@ async function deleteChore(req, res) {
     })
 }
 
-async function getChore(req, res) {
+async function getChore(req, res, next) {
   /* #swagger.parameters['id'] = {
           in: 'path',
           description: 'ID of the chore to get',
@@ -62,6 +62,11 @@ async function getChore(req, res) {
           type: 'string'
       }
   */
+  const { error } = schemas.idSchema.validate(req.params.id)
+  if (error) {
+    return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
+  }
+
   const id = ObjectId.createFromHexString(req.params.id)
   await db.findOne({ collection, query: { _id: id } })
     .then((result) => {
@@ -90,7 +95,7 @@ async function getChores(req, res, next) {
     }
     const { error } = schemas.idArraySchema.validate(ids, { abortEarly: false })
     if (error) {
-      throw new ServerError(400, error.details.map((error) => error.message))
+      return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
     }
   }
   const params = ids ? { _id: { $in: ids.map((id) => ObjectId.createFromHexString(id)) } } : {}
@@ -116,7 +121,7 @@ async function updateChore(req, res, next) {
   */
   const { error } = schemas.choreSchema.validate(req.body, { abortEarly: false })
   if (error) {
-    throw new ServerError(400, error.details.map((error) => error.message))
+    return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
   }
 
   const id = ObjectId.createFromHexString(req.params.id)
