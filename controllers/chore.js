@@ -46,7 +46,7 @@ async function deleteChore(req, res, next) {
       if (result.deletedCount === 0) {
         res.status(404).send(`No chore found with id: ${req.params.id}`)
       } else {
-        res.status(204).send()
+        res.status(200).send()
       }
     })
     .catch((err) => {
