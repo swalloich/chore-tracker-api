@@ -15,7 +15,7 @@ async function createChore(req, res) {
           }
       }
   */
-  const { error } = schemas.choreSchema.validate(req.body, { abortEarly: false })
+  const { error } = schemas.newChoreSchema.validate(req.body, { abortEarly: false })
   if (error) {
     throw new ServerError(400, error.details.map((error) => error.message))
   }
@@ -104,13 +104,33 @@ async function getChores(req, res, next) {
     })
 }
 
-async function updateChore(req, res) {
+async function updateChore(req, res, next) {
   /* #swagger.parameters['body'] = {
           in: 'body',
           description: 'update the specified chore',
           required: true,
+          schema: {
+              $ref: "#/definitions/Chore"
+          }
       }
   */
+  const { error } = schemas.choreSchema.validate(req.body, { abortEarly: false })
+  if (error) {
+    throw new ServerError(400, error.details.map((error) => error.message))
+  }
+
+  const id = ObjectId.createFromHexString(req.params.id)
+  await db.updateOne({ collection, filter: { _id: id }, data: req.body })
+    .then((result) => {
+      if (result.matchedCount === 0) {
+        res.status(404).send(`No chore found with id: ${req.params.id}`)
+      } else {
+        res.status(204).send()
+      }
+    })
+    .catch((err) => {
+      next(err)
+    })
 }
 
 module.exports = { createChore, deleteChore, getChore, getChores, updateChore }

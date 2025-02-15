@@ -165,7 +165,7 @@
           {
             "name": "ids",
             "in": "query",
-            "description": "get all chores in the list of ids, or all chores if not specified. Recommended to use GET /chores/:id if only one chore is needed",
+            "description": "Get all chores in the list of ids, or all chores if not specified. Recommend using GET /chores/:id if only one chore is needed",
             "required": false,
             "type": "string"
           }
@@ -173,9 +173,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
       },
@@ -195,9 +192,6 @@
         "responses": {
           "201": {
             "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
       }
@@ -217,9 +211,6 @@
         "responses": {
           "204": {
             "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -261,14 +252,16 @@
             "description": "update the specified chore",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {}
+              "$ref": "#/definitions/Chore"
             }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }

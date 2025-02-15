@@ -1,6 +1,16 @@
 const Joi = require('joi')
 
 const choreSchema = Joi.object({
+  name: Joi.string(),
+  collectionId: Joi.string(),
+  description: Joi.string(),
+  frequency: Joi.string(),
+  nextDue: Joi.date(),
+  currentAssignee: Joi.string(),
+  assignedUsers: Joi.array().items(Joi.string()),
+})
+
+const newChoreSchema = Joi.object({
   name: Joi.string().required(),
   collectionId: Joi.string(),
   description: Joi.string(),
@@ -10,4 +20,4 @@ const choreSchema = Joi.object({
   assignedUsers: Joi.array().items(Joi.string()).required(),
 })
 
-module.exports = choreSchema
+module.exports = { choreSchema, newChoreSchema }
