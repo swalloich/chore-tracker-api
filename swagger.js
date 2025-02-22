@@ -9,8 +9,8 @@ const doc = {
     title: 'Chore Tracker API',
     description: 'API for tracking chores',
   },
-  host: 'localhost:8080',
-  schemes: ['http'],
+  host: 'fantastic-parakeet-ogz0.onrender.com',
+  schemes: ['https'],
   definitions: {
     NewChore: {
       $name: 'Take out the trash',
