@@ -1,19 +1,8 @@
 const express = require('express')
-const cors = require('cors')
 const app = express()
 require('./db').connect()
 const errorHandler = require('./middleware/errorHandler')
 
-const allowedOrigins = ['http://localhost:3000', process.env.PROD_FRONTEND_URL]
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true)
-    } else {
-      callback(new Error('Origin not allowed by CORS'))
-    }
-  }
-}))
 app.use(express.json())
 app.use('/', require('./routes'))
 

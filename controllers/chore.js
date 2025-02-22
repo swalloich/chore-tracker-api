@@ -1,6 +1,6 @@
 const db = require('../db')
 const { ObjectId } = require('mongodb')
-const schemas = require('./validation')
+const { choreSchema, newChoreSchema } = require('./validation')
 const ServerError = require('../middleware/ServerError')
 
 const collection = 'chores'
@@ -15,7 +15,7 @@ async function createChore(req, res, next) {
           }
       }
   */
-  const { error } = schemas.newChoreSchema.validate(req.body, { abortEarly: false })
+  const { error } = newChoreSchema.validate(req.body, { abortEarly: false })
   if (error) {
     return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
   }
@@ -44,7 +44,7 @@ async function deleteChore(req, res, next) {
   await db.deleteOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
     .then((result) => {
       if (result.deletedCount === 0) {
-        res.status(404).send(`No chore found with id: ${req.params.id}`)
+        res.status(404).send(`No user found with id: ${req.params.id}`)
       } else {
         res.status(200).send()
       }
@@ -86,6 +86,10 @@ async function getChores(req, res, next) {
           in: 'query',
           description: 'Get all chores in the list of ids, or all chores if not specified. Recommend using GET /chores/:id if only one chore is needed',
           required: false,
+          type: 'array',
+          items: {
+              type: 'string'
+          }
       }
   */
   let ids = req.query.ids
@@ -119,7 +123,7 @@ async function updateChore(req, res, next) {
           }
       }
   */
-  const { error } = schemas.choreSchema.validate(req.body, { abortEarly: false })
+  const { error } = choreSchema.validate(req.body, { abortEarly: false })
   if (error) {
     return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
   }

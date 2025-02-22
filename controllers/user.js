@@ -1,10 +1,11 @@
 const db = require('../db')
 const { ObjectId } = require('mongodb')
-const { userSchema } = require('./validation')
+const { idSchema, userSchema } = require('./validation')
+const ServerError = require('../middleware/ServerError')
 
 const collection = 'users'
 
-async function createUser(req, res) {
+async function createUser(req, res, next) {
   /* #swagger.parameters['body'] = {
           in: 'body',
           description: 'Chore data',
@@ -14,9 +15,20 @@ async function createUser(req, res) {
           }
       }
   */
+ const { error } = userSchema.validate(req.body, { abortEarly: false })
+  if (error) {
+    return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
+  }
+
+  try {
+    const result = await db.insertOne({ collection, data: req.body })
+    res.status(201).json({ id: result.insertedId })
+  } catch (err) {
+    next(err)
+  }
 }
 
-async function deleteUser(req, res) {
+async function deleteUser(req, res, next) {
   /* #swagger.parameters['id'] = {
           in: 'path',
           description: 'ID of the chore to delete',
@@ -24,9 +36,25 @@ async function deleteUser(req, res) {
           type: 'string'
       }
   */
+  const { error } = idSchema.validate(req.params.id)
+  if (error) {
+    return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
+  }
+
+  await db.deleteOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
+    .then((result) => {
+      if (result.deletedCount === 0) {
+        res.status(404).send(`No user found with id: ${req.params.id}`)
+      } else {
+        res.status(200).send()
+      }
+    })
+    .catch((err) => {
+      next(err)
+    })
 }
 
-async function getUser(req, res) {
+async function getUser(req, res, next) {
   /* #swagger.parameters['id'] = {
           in: 'path',
           description: 'ID of the chore to get',
@@ -34,18 +62,58 @@ async function getUser(req, res) {
           type: 'string'
       }
   */
+  const { error } = idSchema.validate(req.params.id)
+  if (error) {
+    return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
+  }
+
+  const id = ObjectId.createFromHexString(req.params.id)
+  await db.findOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
+    .then((result) => {
+      if (result) {
+        res.status(200).json(result)
+      } else {
+        res.status(404).send(`No user found with id: ${req.params.id}`)
+      }
+    })
+    .catch((err) => {
+      next(err)
+    })
 }
 
-async function getUsers(req, res) {
-  /* #swagger.parameters['body'] = {
-          in: 'body',
-          description: 'get all chores that match the query',
-          required: true,
+async function getUsers(req, res, next) {
+  /* #swagger.parameters['ids'] = {
+          in: 'query',
+          description: 'Get all users in the list of ids, or all users if not provided',
+          required: false,
+          type: 'array',
+          items: {
+              type: 'string'
+          }
       }
   */
+  let ids = req.query.ids
+  if (ids) {
+    if (typeof ids === 'string') {
+      ids = ids.split(',')
+    }
+    const { error } = idArraySchema.validate(ids, { abortEarly: false })
+    if (error) {
+      return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
+    }
+  }
+  const params = ids ? { _id: { $in: ids.map(id => ObjectId.createFromHexString(id)) } } : {}
+  const users = await db.find({ collection, params })
+  users.toArray()
+    .then((result) => {
+      res.status(200).json(result)
+    })
+    .catch((err) => {
+      next(err)
+    })
 }
 
-async function updateUser(req, res) {
+async function updateUser(req, res, next) {
   /* #swagger.parameters['body'] = {
           in: 'body',
           description: 'update the specified chore',
@@ -55,6 +123,23 @@ async function updateUser(req, res) {
           }
       }
   */
+  const { error } = userSchema.validate(req.body, { abortEarly: false })
+  if (error) {
+    return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
+  }
+
+  const id = ObjectId.createFromHexString(req.params.id)
+  await db.updateOne({ collection, filter: { _id: id }, data: req.body })
+    .then((result) => {
+      if (result.matchedCount === 0) {
+        res.status(404).send(`No user found with id: ${req.params.id}`)
+      } else {
+        res.status(200).send()
+      }
+    })
+    .catch((err) => {
+      next(err)
+    })
 }
 
 module.exports = { createUser, deleteUser, getUser, getUsers, updateUser }

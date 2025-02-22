@@ -167,7 +167,10 @@
             "in": "query",
             "description": "Get all chores in the list of ids, or all chores if not specified. Recommend using GET /chores/:id if only one chore is needed",
             "required": false,
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -209,8 +212,8 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK"
           },
           "404": {
             "description": "Not Found"
@@ -271,19 +274,19 @@
         "description": "",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "description": "get all chores that match the query",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {}
+            "name": "ids",
+            "in": "query",
+            "description": "Get all users in the list of ids, or all users if not provided",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
           }
         }
       },
@@ -301,8 +304,8 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "Created"
           }
         }
       }
@@ -320,8 +323,11 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -337,8 +343,11 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -362,8 +371,11 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
