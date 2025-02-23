@@ -41,7 +41,7 @@ async function deleteUser(req, res, next) {
     return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
   }
 
-  await db.deleteOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
+  await db.deleteOne({ collection, query: { _id: ObjectId.createFromHexString(req.params.id) } })
     .then((result) => {
       if (result.deletedCount === 0) {
         res.status(404).send(`No user found with id: ${req.params.id}`)
@@ -68,7 +68,7 @@ async function getUser(req, res, next) {
   }
 
   const id = ObjectId.createFromHexString(req.params.id)
-  await db.findOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
+  await db.findOne({ collection, query: { _id: id } })
     .then((result) => {
       if (result) {
         res.status(200).json(result)
@@ -129,7 +129,7 @@ async function updateUser(req, res, next) {
   }
 
   const id = ObjectId.createFromHexString(req.params.id)
-  await db.updateOne({ collection, filter: { _id: id }, data: req.body })
+  await db.updateOne({ collection, query: { _id: id }, data: req.body })
     .then((result) => {
       if (result.matchedCount === 0) {
         res.status(404).send(`No user found with id: ${req.params.id}`)

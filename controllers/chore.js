@@ -1,6 +1,6 @@
 const db = require('../db')
 const { ObjectId } = require('mongodb')
-const { choreSchema, newChoreSchema } = require('./validation')
+const { choreSchema, idSchema, newChoreSchema } = require('./validation')
 const ServerError = require('../middleware/ServerError')
 
 const collection = 'chores'
@@ -36,12 +36,13 @@ async function deleteChore(req, res, next) {
           type: 'string'
       }
   */
-  const { error } = schemas.idSchema.validate(req.params.id)
+  const { error } = idSchema.validate(req.params.id)
   if (error) {
     return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
   }
 
-  await db.deleteOne({ collection, filter: { _id: ObjectId.createFromHexString(req.params.id) } })
+  const id = ObjectId.createFromHexString(req.params.id)
+  await db.deleteOne({ collection, query: { _id: id } })
     .then((result) => {
       if (result.deletedCount === 0) {
         res.status(404).send(`No user found with id: ${req.params.id}`)
@@ -62,7 +63,7 @@ async function getChore(req, res, next) {
           type: 'string'
       }
   */
-  const { error } = schemas.idSchema.validate(req.params.id)
+  const { error } = idSchema.validate(req.params.id)
   if (error) {
     return next(new ServerError(400, error.details.map(error => error.message).join(', ')))
   }
@@ -129,7 +130,7 @@ async function updateChore(req, res, next) {
   }
 
   const id = ObjectId.createFromHexString(req.params.id)
-  await db.updateOne({ collection, filter: { _id: id }, data: req.body })
+  await db.updateOne({ collection, query: { _id: id }, data: req.body })
     .then((result) => {
       if (result.matchedCount === 0) {
         res.status(404).send(`No chore found with id: ${req.params.id}`)
