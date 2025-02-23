@@ -21,9 +21,12 @@ function connect() {
     })
 }
 
-async function deleteOne({ collection, filter, options }, next) {
+async function deleteOne({ collection, options, query }, next) {
+  if (!collection) throw new Error('Collection is required for deleteOne')
+  if (!query) throw new Error('Query is required for deleteOne')
+
   try {
-    return client.db(DB_NAME).collection(collection).deleteOne(filter, options)
+    return client.db(DB_NAME).collection(collection).deleteOne(query, options)
   } catch (err) {
     next(err)
   }
@@ -37,6 +40,8 @@ async function deleteOne({ collection, filter, options }, next) {
  * @returns {Promise} - The result of the find function
  */
 async function find({ collection, params }, next) {
+  if (!collection) throw new Error('Collection is required for find')
+
   try {
     return client.db(DB_NAME).collection(collection).find({...params})
   } catch (err) {
@@ -53,6 +58,9 @@ async function find({ collection, params }, next) {
  * @returns {Promise} - The result of the findOne function
  */
 async function findOne({ collection, options, query }, next) {
+  if (!query) throw new Error('Query is required for findOne')
+  if (!collection) throw new Error('Collection is required for findOne')
+
   try {
     return client.db(DB_NAME).collection(collection).findOne(query, options)
   } catch (err) {
@@ -68,6 +76,9 @@ async function findOne({ collection, options, query }, next) {
  * @returns {Promise} - The result of the insertOne function
  */
 async function insertOne({ collection, data }, next) {
+  if (!data) throw new Error('Data is required for insertOne')
+  if (!collection) throw new Error('Collection is required for insertOne')
+
   try {
     return client.db(DB_NAME).collection(collection).insertOne(data)
   } catch (err) {
@@ -79,13 +90,17 @@ async function insertOne({ collection, data }, next) {
  * @param {*} params - The parameters for the updateOne function
  * @param {string} params.collection - The collection to update
  * @param {Object} params.data - The data to update
- * @param {Object} params.filter - The filter for the update
+ * @param {Object} params.query - The query for the update
  * @param {Object} params.options - The options for the update
  * @returns {Promise} - The result of the updateOne function
  */
-async function updateOne({ collection, data, filter, options }, next) {
+async function updateOne({ collection, data, query, options }, next) {
+  if (!collection) throw new Error('Collection is required for updateOne')
+  if (!data) throw new Error('Data is required for updateOne')
+  if (!query) throw new Error('Query is required for updateOne')
+
   try {
-    return client.db(DB_NAME).collection(collection).updateOne(filter, { $set: data }, options)
+    return client.db(DB_NAME).collection(collection).updateOne(query, { $set: data }, options)
   } catch (err) {
     next(err)
   }
