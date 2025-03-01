@@ -11,6 +11,14 @@ const doc = {
   },
   host: 'fantastic-parakeet-ogz0.onrender.com',
   schemes: ['https'],
+  securityDefinitions: {
+    bearerAuth: {
+      type: "apiKey",
+      in: "header",
+      name: 'Authorization',
+      description: "Enter a bearer token to access the endpoints",
+    }
+  },
   definitions: {
     NewChore: {
       $name: 'Take out the trash',
@@ -39,6 +47,10 @@ const doc = {
       name: 'Kitchen Chores',
       description: 'Chores for the kitchen',
       chores: ['chore_id'],
+    },
+    Login: {
+      $email: 'john.doe@example.com',
+      $password: 'password',
     },
     NewUser: {
       $firstName: 'John',

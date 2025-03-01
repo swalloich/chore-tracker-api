@@ -2,6 +2,7 @@ const db = require('../db')
 const { ObjectId } = require('mongodb')
 const { idSchema, userSchema } = require('./validation')
 const ServerError = require('../middleware/ServerError')
+const { hashPassword } = require('./utilities')
 
 const collection = 'users'
 
@@ -14,6 +15,7 @@ async function createUser(req, res, next) {
               $ref: "#/definitions/NewUser"
           }
       }
+      #swagger.security = null
   */
  const { error } = userSchema.validate(req.body, { abortEarly: false })
   if (error) {
@@ -21,7 +23,11 @@ async function createUser(req, res, next) {
   }
 
   try {
-    const result = await db.insertOne({ collection, data: req.body })
+    const encodedUser = {
+      ...req.body,
+      password: await hashPassword(req.body.password),
+    }
+    const result = await db.insertOne({ collection, data: encodedUser })
     res.status(201).json({ id: result.insertedId })
   } catch (err) {
     next(err)

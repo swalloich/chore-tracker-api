@@ -1,11 +1,28 @@
 const express = require('express')
 const router = express.Router()
+const { isAuthenticated } = require('../controllers/auth')
 
 router.use('/', require('./swagger'))
-router.use('/auth', require('./auth'))
-router.use('/chores', require('./chores'))
-router.use('/collections', require('./choreCollections'))
-router.use('/profile', require('./profile'))
-router.use('/users', require('./users'))
+router.use('/chores', isAuthenticated, require('./chores')
+  /*
+  #swagger.security = [{
+      "bearerAuth": []
+  }]
+  */
+)
+router.use('/collections', isAuthenticated, require('./choreCollections')
+  /*
+  #swagger.security = [{
+      "bearerAuth": []
+  }]
+  */
+)
+router.use('/users', require('./users')
+  /*
+  #swagger.security = [{
+      "bearerAuth": []
+  }]
+  */
+)
 
 module.exports = router
