@@ -195,11 +195,14 @@
         "description": "",
         "parameters": [
           {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the user"
+            "name": "ids",
+            "in": "query",
+            "description": "Get all chores in the list of ids, or all chores if not specified. Recommend using GET /chores/:id if only one chore is needed",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -217,18 +220,12 @@
         "description": "",
         "parameters": [
           {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "body",
             "in": "body",
-            "description": "Chore collection data",
+            "description": "Chore data",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/NewCollection"
+              "$ref": "#/definitions/NewChore"
             }
           }
         ],
@@ -244,23 +241,16 @@
         ]
       }
     },
-    "/collections/{user_id}/{collection_id}": {
+    "/chores/{id}": {
       "delete": {
         "description": "",
         "parameters": [
           {
-            "name": "user_id",
+            "name": "id",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "ID of the user"
-          },
-          {
-            "name": "collection_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the collection to get"
+            "description": "ID of the chore to delete"
           }
         ],
         "responses": {
@@ -278,18 +268,11 @@
         "description": "",
         "parameters": [
           {
-            "name": "user_id",
+            "name": "id",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "ID of the user"
-          },
-          {
-            "name": "collection_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the collection to delete"
+            "description": "ID of the chore to get"
           }
         ],
         "responses": {
@@ -307,26 +290,18 @@
         "description": "",
         "parameters": [
           {
-            "name": "user_id",
+            "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "ID of the user"
-          },
-          {
-            "name": "collection_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the collection to update"
+            "type": "string"
           },
           {
             "name": "body",
             "in": "body",
-            "description": "Update data for the collection",
+            "description": "update the specified chore",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Collection"
+              "$ref": "#/definitions/Chore"
             }
           }
         ],
@@ -380,9 +355,15 @@
         "description": "",
         "parameters": [
           {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "body",
             "in": "body",
-            "description": "Chore data",
+            "description": "Chore collection data",
             "required": true,
             "schema": {
               "$ref": "#/definitions/NewUser"
@@ -404,7 +385,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "user_id",
             "in": "path",
             "required": true,
             "type": "string",
@@ -437,7 +418,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "user_id",
             "in": "path",
             "required": true,
             "type": "string",
@@ -470,10 +451,18 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "user_id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID of the user"
+          },
+          {
+            "name": "collection_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the collection to update"
           },
           {
             "name": "Authorization",
@@ -483,7 +472,7 @@
           {
             "name": "body",
             "in": "body",
-            "description": "update the specified chore",
+            "description": "Update data for the collection",
             "required": true,
             "schema": {
               "$ref": "#/definitions/User"
