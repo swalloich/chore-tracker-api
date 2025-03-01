@@ -5,7 +5,6 @@ const errorHandler = require('./middleware/errorHandler')
 
 app.use(express.json())
 app.use('/', require('./routes'))
-
 app.use(errorHandler)
 
 const DEFAULT_PORT = process.env.PORT || 8080

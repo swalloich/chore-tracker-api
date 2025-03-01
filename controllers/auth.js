@@ -61,7 +61,7 @@ function isAuthenticated(req, res, next) {
 
     const decoded = jwt.verify(token, process.env.AUTH_SECRET)
 
-    if (tokenIsExpired(token)) {
+    if (tokenIsExpired(decoded)) {
       tokenCache.set(`blacklist:${token}`, 'blacklist', decoded.exp)
       return res.status(401).json({ message: 'Token expired' })
     }

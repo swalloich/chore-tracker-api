@@ -54,7 +54,7 @@ async function find({ collection, params }, next) {
  * @param {Object} params - The parameters for the findOne function
  * @param {string} params.collection - The collection to search
  * @param {string} params.options - The options for the search
- * @param {string} params.query - The query to search for
+ * @param {Object} params.query - The query to search for
  * @returns {Promise} - The result of the findOne function
  */
 async function findOne({ collection, options, query }, next) {
