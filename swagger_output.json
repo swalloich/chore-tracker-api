@@ -31,16 +31,6 @@
         }
       }
     },
-    "/auth/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/chores/": {
       "get": {
         "description": "",
@@ -286,7 +276,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "auth0": []
+          }
+        ]
       }
     },
     "/users/": {

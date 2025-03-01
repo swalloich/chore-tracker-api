@@ -12,6 +12,11 @@ const config = {
   baseURL: getCurrentUrl(),
   clientID: process.env.AUTH0_CLIENT_ID,
   issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+  routes: {
+    login: '/auth/login',
+    logout: '/auth/logout',
+    callback: '/auth/callback',
+  }
 }
 
 app.use(express.json())
